@@ -2,6 +2,7 @@ package video.rental.demo.application;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import video.rental.demo.domain.Customer;
@@ -32,6 +33,16 @@ public class Interactor {
 				builder.append("\tTitle: " + rental.getVideo().getTitle() + " ");
 				builder.append("\tPrice Code: " + rental.getVideo().getPriceCode());
 			}
+			
+			List<Rental> customerRentals = foundCustomer.getRentals();
+			for (Iterator<Rental> it = customerRentals.iterator(); it.hasNext();) {
+				Rental rental = it.next();
+				if (rental.getVideo().isRented()) {
+					Video video = rental.returnVideo();
+					video.setRented(false);
+					getRepository().saveVideo(video);
+				}
+			}
 
 			List<Rental> rentals = new ArrayList<>();
 			foundCustomer.setRentals(rentals);
@@ -48,11 +59,13 @@ public class Interactor {
 
 		List<Rental> customerRentals = foundCustomer.getRentals();
 
-		for (Rental rental : customerRentals) {
+		for (Iterator<Rental> it = customerRentals.iterator(); it.hasNext();) {
+			Rental rental = it.next();
 			if (rental.getVideo().getTitle().equals(videoTitle) && rental.getVideo().isRented()) {
 				Video video = rental.returnVideo();
 				video.setRented(false);
 				getRepository().saveVideo(video);
+				it.remove();
 				break;
 			}
 		}
