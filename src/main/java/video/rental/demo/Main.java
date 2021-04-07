@@ -11,13 +11,12 @@ public class Main {
 	private static GraphicUI ui;
 	private static Repository repository = new RepositoryDBImpl();
 	public static void main(String[] args) {
-//		Repository repository = new RepositoryDBImpl();
-//		ui = new CmdUI(repository);
-//		ui.start();
 		SampleGenerator sampleGenerator = new SampleGenerator(repository);
 		sampleGenerator.generateSamples();
 		Interactor interactor = new Interactor(repository);
+		
 		ui = new GraphicUI(interactor);
+
 		ui.start();
 	}
 }
