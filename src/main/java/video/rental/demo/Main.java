@@ -19,7 +19,5 @@ public class Main {
 		Interactor interactor = new Interactor(repository);
 		ui = new GraphicUI(interactor);
 		ui.start();
-		
-		
 	}
 }
