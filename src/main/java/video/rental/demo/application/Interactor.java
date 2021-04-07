@@ -3,7 +3,6 @@ package video.rental.demo.application;
 import java.io.StringBufferInputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import video.rental.demo.domain.Customer;
@@ -34,17 +33,7 @@ public class Interactor {
 				builder.append("\tTitle: " + rental.getVideo().getTitle() + " ");
 				builder.append("\tPrice Code: " + rental.getVideo().getPriceCode());
 			}
-
-			List<Rental> customerRentals = foundCustomer.getRentals();
-			for (Iterator<Rental> it = customerRentals.iterator(); it.hasNext();) {
-				Rental rental = it.next();
-				if (rental.getVideo().isRented()) {
-					Video video = rental.returnVideo();
-					video.setRented(false);
-					getRepository().saveVideo(video);
-				}
-			}
-			
+	
 			List<Rental> rentals = new ArrayList<Rental>();
 			foundCustomer.setRentals(rentals);
 	
@@ -62,17 +51,15 @@ public class Interactor {
 	
 		List<Rental> customerRentals = foundCustomer.getRentals();
 	
-		for (Iterator<Rental> it = customerRentals.iterator(); it.hasNext();) {
-			Rental rental = it.next();
+		for (Rental rental : customerRentals) {
 			if (rental.getVideo().getTitle().equals(videoTitle) && rental.getVideo().isRented()) {
 				Video video = rental.returnVideo();
 				video.setRented(false);
 				getRepository().saveVideo(video);
-				it.remove();
 				break;
 			}
 		}
-		foundCustomer.setRentals(customerRentals);
+	
 		getRepository().saveCustomer(foundCustomer);
 		return "";
 	}
@@ -94,47 +81,29 @@ public class Interactor {
 		return builder.toString();
 	}
 
-	public String listCustomers() {
-		StringBuilder builder = new StringBuilder();
+	public void listCustomers() {
 		List<Customer> customers = getRepository().findAllCustomers();
 	
 		for (Customer customer : customers) {
 			System.out.println("ID: " + customer.getCode() + "\nName: " + customer.getName() + "\tRentals: "
 					+ customer.getRentals().size());
-			builder.append(
-					"ID: " + customer.getCode() + "\nName: " + customer.getName() + "\tRentals: "
-					+ customer.getRentals().size()
-					+ "\n"
-					);
 			for (Rental rental : customer.getRentals()) {
 				System.out.print("\tTitle: " + rental.getVideo().getTitle() + " ");
 				System.out.print("\tPrice Code: " + rental.getVideo().getPriceCode());
 				System.out.println("\tReturn Status: " + rental.getStatus());
-				builder.append(
-						"\tTitle: " + rental.getVideo().getTitle() + " " + 
-						"\tPrice Code: " + rental.getVideo().getPriceCode() + 
-						"\tReturn Status: " + rental.getStatus() +
-						"\n"
-						);
 			}
 		}
-		return builder.toString();
 	}
 
-	public String getCustomerReport(int code) {
-		StringBuilder builder = new StringBuilder();
-		
+	public void getCustomerReport(int code) {
 		Customer foundCustomer = getRepository().findCustomerById(code);
 	
 		if (foundCustomer == null) {
-			builder.append("No customer found.");
 			System.out.println("No customer found");
 		} else {
 			String result = foundCustomer.getReport();
-			builder.append(result);
 			System.out.println(result);
 		}
-		return builder.toString();
 	}
 
 	public void rentVideo(int code, String videoTitle) {

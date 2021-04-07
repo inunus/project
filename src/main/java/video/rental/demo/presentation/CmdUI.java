@@ -10,6 +10,7 @@ public class CmdUI {
 	private Interactor interactor;
 	
 	public CmdUI(Interactor interactor) {
+		super();
 		this.interactor = interactor;
 	}
 
