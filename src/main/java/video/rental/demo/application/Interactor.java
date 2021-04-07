@@ -134,6 +134,21 @@ public class Interactor {
 		if (foundVideo.isRented() == true)
 			return;
 
+		if(foundCustomer.isAvailableAge(foundVideo.getVideoRating())) {
+			foundVideo.setRented(true);
+			Rental rental = new Rental(foundVideo);
+			
+			List<Rental> customerRentals = foundCustomer.getRentals();
+			customerRentals.add(rental);
+			foundCustomer.setRentals(customerRentals);
+			
+			getRepository().saveVideo(foundVideo);
+			getRepository().saveCustomer(foundCustomer);
+		}
+		else {
+			return;
+		}
+		/*
 		Boolean status = foundVideo.rentFor(foundCustomer);
 		if (status == true) {
 			getRepository().saveVideo(foundVideo);
@@ -141,7 +156,10 @@ public class Interactor {
 		} else {
 			return;
 		}
+		*/
 	}
+	
+	
 
 	public void registerCustomer(String name, int code, String dateOfBirth) {
 		Customer customer = new Customer(code, name, LocalDate.parse(dateOfBirth));
