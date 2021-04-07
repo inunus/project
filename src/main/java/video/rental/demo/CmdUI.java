@@ -5,19 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
-
 public class CmdUI {
-	// JPA EntityManager
-	private static EntityManager em = PersistenceManager.INSTANCE.getEntityManager();
-
 	private static Scanner scanner = new Scanner(System.in);
 
-	public void start() {
-		generateSamples();
+	private Repository repository;
+	
+	public CmdUI(Repository repository) {
+		super();
+		this.repository = repository;
+	}
 
+	public void start() {
 		boolean quit = false;
 		while (!quit) {
 			int command = getCommand();
@@ -60,7 +58,7 @@ public class CmdUI {
 		System.out.println("Enter customer code: ");
 		int customerCode = scanner.nextInt();
 
-		Customer foundCustomer = findCustomerById(customerCode);
+		Customer foundCustomer = repository.findCustomerById(customerCode);
 
 		if (foundCustomer == null) {
 			System.out.println("No customer found");
@@ -75,7 +73,7 @@ public class CmdUI {
 			List<Rental> rentals = new ArrayList<Rental>();
 			foundCustomer.setRentals(rentals);
 
-			saveCustomer(foundCustomer);
+			repository.saveCustomer(foundCustomer);
 		}
 	}
 
@@ -83,7 +81,7 @@ public class CmdUI {
 		System.out.println("Enter customer code: ");
 		int customerCode = scanner.nextInt();
 
-		Customer foundCustomer = findCustomerById(customerCode);
+		Customer foundCustomer = repository.findCustomerById(customerCode);
 		if (foundCustomer == null)
 			return;
 
@@ -96,18 +94,18 @@ public class CmdUI {
 			if (rental.getVideo().getTitle().equals(videoTitle) && rental.getVideo().isRented()) {
 				Video video = rental.returnVideo();
 				video.setRented(false);
-				saveVideo(video);
+				repository.saveVideo(video);
 				break;
 			}
 		}
 
-		saveCustomer(foundCustomer);
+		repository.saveCustomer(foundCustomer);
 	}
 
 	public void listVideos() {
 		System.out.println("List of videos");
 
-		List<Video> videos = findAllVideos();
+		List<Video> videos = repository.findAllVideos();
 
 		for (Video video : videos) {
 			System.out.println(
@@ -123,7 +121,7 @@ public class CmdUI {
 	public void listCustomers() {
 		System.out.println("List of customers");
 
-		List<Customer> customers = findAllCustomers();
+		List<Customer> customers = repository.findAllCustomers();
 
 		for (Customer customer : customers) {
 			System.out.println("ID: " + customer.getCode() + "\nName: " + customer.getName() + "\tRentals: "
@@ -141,7 +139,7 @@ public class CmdUI {
 		System.out.println("Enter customer code: ");
 		int code = scanner.nextInt();
 
-		Customer foundCustomer = findCustomerById(code);
+		Customer foundCustomer = repository.findCustomerById(code);
 
 		if (foundCustomer == null) {
 			System.out.println("No customer found");
@@ -155,14 +153,14 @@ public class CmdUI {
 		System.out.println("Enter customer code: ");
 		int code = scanner.nextInt();
 
-		Customer foundCustomer = findCustomerById(code);
+		Customer foundCustomer = repository.findCustomerById(code);
 		if (foundCustomer == null)
 			return;
 
 		System.out.println("Enter video title to rent: ");
 		String videoTitle = scanner.next();
 
-		Video foundVideo = findVideoByTitle(videoTitle);
+		Video foundVideo = repository.findVideoByTitle(videoTitle);
 
 		if (foundVideo == null)
 			return;
@@ -172,8 +170,8 @@ public class CmdUI {
 
 		Boolean status = foundVideo.rentFor(foundCustomer);
 		if (status == true) {
-			saveVideo(foundVideo);
-			saveCustomer(foundCustomer);
+			repository.saveVideo(foundVideo);
+			repository.saveCustomer(foundCustomer);
 		} else {
 			return;
 		}
@@ -191,7 +189,7 @@ public class CmdUI {
 			String dateOfBirth = scanner.next();
 
 			Customer customer = new Customer(code, name, LocalDate.parse(dateOfBirth));
-			saveCustomer(customer);
+			repository.saveCustomer(customer);
 		} else {
 			System.out.println("Enter video title to register: ");
 			String title = scanner.next();
@@ -214,7 +212,7 @@ public class CmdUI {
 			
 			Video video = new Video(title, videoType, priceCode, rating, registeredDate);
 
-			saveVideo(video);
+			repository.saveVideo(video);
 		}
 	}
 
@@ -234,80 +232,5 @@ public class CmdUI {
 
 		return command;
 	}
-
-	private void generateSamples() {
-		Customer james = new Customer(0, "James", LocalDate.parse("1975-05-15"));
-		Customer brown = new Customer(1, "Brown", LocalDate.parse("2002-03-17"));
-        Customer shawn = new Customer(2, "Shawn", LocalDate.parse("2010-11-11"));
-		saveCustomer(james);
-		saveCustomer(brown);
-		saveCustomer(shawn);
-
-		Video v1 = new Video("V1", Video.CD, Video.REGULAR, Rating.FIFTEEN, LocalDate.of(2018, 1, 1));
-		v1.setRented(true);
-		Video v2 = new Video("V2", Video.DVD, Video.NEW_RELEASE, Rating.TWELVE, LocalDate.of(2018, 3, 1));
-		v2.setRented(true);
-        Video v3 = new Video("V3", Video.VHS, Video.NEW_RELEASE, Rating.EIGHTEEN, LocalDate.of(2018, 3, 1));
-
-		saveVideo(v1);
-		saveVideo(v2);
-		saveVideo(v3);
-
-		Rental r1 = new Rental(v1);
-		Rental r2 = new Rental(v2);
-
-		List<Rental> rentals = james.getRentals();
-		rentals.add(r1);
-		rentals.add(r2);
-		james.setRentals(rentals);
-		saveCustomer(james);
-	}
-
-	/*
-	 * Database Access private methods
-	 */
-	private Customer findCustomerById(int code) {
-		em.getTransaction().begin();
-		Customer customer = em.find(Customer.class, code);
-		em.getTransaction().commit();
-		return customer;
-	}
-
-	private Video findVideoByTitle(String title) {
-		em.getTransaction().begin();
-		Video video = em.find(Video.class, title);
-		em.getTransaction().commit();
-		return video;
-	}
-
-	private List<Customer> findAllCustomers() {
-		TypedQuery<Customer> query = em.createQuery("SELECT c FROM Customer c", Customer.class);
-		return query.getResultList();
-	}
-
-	private List<Video> findAllVideos() {
-		TypedQuery<Video> query = em.createQuery("SELECT c FROM Video c", Video.class);
-		return query.getResultList();
-	}
-
-	private void saveCustomer(Customer customer) {
-		try {
-			em.getTransaction().begin();
-			em.persist(customer);
-			em.getTransaction().commit();
-		} catch (PersistenceException e) {
-			return;
-		}
-	}
-
-	private void saveVideo(Video video) {
-		try {
-			em.getTransaction().begin();
-			em.persist(video);
-			em.getTransaction().commit();
-		} catch (PersistenceException e) {
-			return;
-		}
-		return;
-	}
+	
 }
