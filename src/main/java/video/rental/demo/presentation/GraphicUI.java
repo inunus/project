@@ -215,33 +215,38 @@ public class GraphicUI extends JFrame {
 	private void registerVideo() {
 		String title = titleField.getText().toString();
 		String videoTypeString = videoTypeSpinner.getValue().toString();
-		int videoType;
-		if (videoTypeString.equals("Regular"))
-			videoType = 1;
-		else if (videoTypeString.equals("New"))
-			videoType = 2;
-		else // Children
-			videoType = 3;
+		int videoType = convertVideoTypeStringToInt(videoTypeString);
 
 		String priceCodeString = priceCodeSpinner.getValue().toString();
-		int priceCode;
-		if (priceCodeString.equals("VHS"))
-			priceCode = 1;
-		else if (priceCodeString.equals("CD"))
-			priceCode = 2;
-		else // DVD
-			priceCode = 3;
+		int priceCode = convertPriceCodeStringToInt(priceCodeString);
 
 		String ratingString = ratingSpinner.getValue().toString();
-		int videoRating;
-		if (ratingString.equals("Twelve"))
-			videoRating = 1;
-		else if (ratingString.equals("Fifteen"))
-			videoRating = 2;
-		else // Eighteen
-			videoRating = 3;
+		int videoRating = convertRatingStringToInt(ratingString);
 
 		interactor.registerVideo(title, videoType, priceCode, videoRating);
+	}
+	private int convertVideoTypeStringToInt(String videoTypeString) {
+		if (videoTypeString.equals("Regular"))
+			return 1;
+		else if (videoTypeString.equals("New"))
+			return 2;
+		return 3; // Children
+	}
+	
+	private int convertPriceCodeStringToInt(String priceCodeString) {
+		if (priceCodeString.equals("VHS"))
+			return 1;
+		else if (priceCodeString.equals("CD"))
+			return 2;
+		return 3;
+	}
+	
+	private int convertRatingStringToInt(String ratingString) {
+		if (ratingString.equals("Twelve"))
+			return 1;
+		else if (ratingString.equals("Fifteen"))
+			return 2;
+		return 3;// Eighteen
 	}
 
 	private void makeButton(String title, ActionListener listener, int x, int y, int w, int h) {
