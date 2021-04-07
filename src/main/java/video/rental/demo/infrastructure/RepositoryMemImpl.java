@@ -1,8 +1,12 @@
-package video.rental.demo;
+package video.rental.demo.infrastructure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import video.rental.demo.domain.Customer;
+import video.rental.demo.domain.Repository;
+import video.rental.demo.domain.Video;
 
 public class RepositoryMemImpl implements Repository {
 

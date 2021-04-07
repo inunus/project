@@ -1,7 +1,13 @@
-package video.rental.demo;
+package video.rental.demo.utils;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import video.rental.demo.domain.Customer;
+import video.rental.demo.domain.Rating;
+import video.rental.demo.domain.Rental;
+import video.rental.demo.domain.Repository;
+import video.rental.demo.domain.Video;
 
 public class SampleGenerator {
 	private Repository repository;

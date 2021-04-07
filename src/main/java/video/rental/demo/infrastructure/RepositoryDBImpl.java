@@ -1,10 +1,14 @@
-package video.rental.demo;
+package video.rental.demo.infrastructure;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+
+import video.rental.demo.domain.Customer;
+import video.rental.demo.domain.Repository;
+import video.rental.demo.domain.Video;
 
 public class RepositoryDBImpl implements Repository {
 
