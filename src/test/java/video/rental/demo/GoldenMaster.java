@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import video.rental.demo.application.Interactor;
 import video.rental.demo.domain.Repository;
+import video.rental.demo.domain.TextReportImpl;
 import video.rental.demo.infrastructure.RepositoryMemImpl;
 import video.rental.demo.presentation.CmdUI;
 import video.rental.demo.utils.SampleGenerator;
@@ -51,7 +52,7 @@ public class GoldenMaster {
 		System.setOut(pstream);
 		
 		Repository repository = new RepositoryMemImpl();
-		Interactor interactor = new Interactor(repository);
+		Interactor interactor = new Interactor(repository, new TextReportImpl());
 		new SampleGenerator(repository).generateSamples();
 		ui = new CmdUI(interactor);
 		ui.start();
