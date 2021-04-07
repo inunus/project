@@ -8,7 +8,7 @@ public class CmdUI {
 	private static Scanner scanner = new Scanner(System.in);
 
 	private Interactor interactor;
-	
+
 	public CmdUI(Interactor interactor) {
 		super();
 		this.interactor = interactor;
@@ -66,23 +66,23 @@ public class CmdUI {
 
 		System.out.println("Enter video title to return: ");
 		String videoTitle = scanner.next();
-		
-		System.out.print(interactor.returnVideo(customerCode, videoTitle));
+
+		interactor.returnVideo(customerCode, videoTitle);
 	}
 
 	public void listVideos() {
 		System.out.println("List of videos");
 
 		System.out.print(interactor.listVideos());
-		
+
 		System.out.println("End of list");
 	}
 
 	public void listCustomers() {
 		System.out.println("List of customers");
 
-		interactor.listCustomers();
-		
+		System.out.print(interactor.listCustomers());
+
 		System.out.println("End of list");
 	}
 
@@ -90,7 +90,7 @@ public class CmdUI {
 		System.out.println("Enter customer code: ");
 		int code = scanner.nextInt();
 
-		interactor.getCustomerReport(code);
+		System.out.print(interactor.getCustomerReport(code));
 	}
 
 	public void rentVideo() {
@@ -99,7 +99,7 @@ public class CmdUI {
 
 		System.out.println("Enter video title to rent: ");
 		String videoTitle = scanner.next();
-		
+
 		interactor.rentVideo(code, videoTitle);
 	}
 
@@ -127,7 +127,7 @@ public class CmdUI {
 
 			System.out.println("Enter video rating( 1 for 12, 2 for 15, 3 for 18 ):");
 			int videoRating = scanner.nextInt();
-			
+
 			interactor.registerVideo(title, videoType, priceCode, videoRating);
 		}
 	}
@@ -148,5 +148,5 @@ public class CmdUI {
 
 		return command;
 	}
-	
+
 }

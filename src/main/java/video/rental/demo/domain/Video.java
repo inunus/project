@@ -1,5 +1,14 @@
 package video.rental.demo.domain;
 
+import video.rental.demo.domain.prices.ChildrenPrice;
+import video.rental.demo.domain.prices.NewReleasePrice;
+import video.rental.demo.domain.prices.Price;
+import video.rental.demo.domain.prices.RegularPrice;
+import video.rental.demo.domain.videotypes.CDType;
+import video.rental.demo.domain.videotypes.DVDType;
+import video.rental.demo.domain.videotypes.VHSType;
+import video.rental.demo.domain.videotypes.VideoType;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -9,6 +18,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 @Entity
@@ -17,13 +27,16 @@ public class Video {
 	@Id
 	private String title;
 	private Rating videoRating;
-	private int priceCode;
+
+	@Transient
+	private Price price;
 
 	public static final int REGULAR = 1;
 	public static final int NEW_RELEASE = 2;
 	public static final int CHILDREN = 3;
 
-	private int videoType;
+	@Transient
+	private VideoType type;
 	public static final int VHS = 1;
 	public static final int CD = 2;
 	public static final int DVD = 3;
@@ -36,35 +49,35 @@ public class Video {
 
 	public Video(String title, int videoType, int priceCode, Rating videoRating, LocalDate registeredDate) {
 		this.title = title;
-		this.videoType = videoType;
-		this.priceCode = priceCode;
 		this.videoRating = videoRating;
 		this.registeredDate = registeredDate;
 		this.rented = false;
-	}
-
-	public int getLateReturnPointPenalty() {
-		int pentalty = 0;
-		switch (videoType) {
-		case VHS:
-			pentalty = 1;
-			break;
-		case CD:
-			pentalty = 2;
-			break;
-		case DVD:
-			pentalty = 3;
-			break;
-		}
-		return pentalty;
+		this.setVideoType(videoType);
+		this.setPriceCode(priceCode);
 	}
 
 	public int getPriceCode() {
-		return priceCode;
+		return price.getPriceCode();
 	}
 
-	public void setPriceCode(int priceCode) {
-		this.priceCode = priceCode;
+	public double getCharge(int daysRented) {
+		return price.getCharge(daysRented);
+	}
+
+	private void setPriceCode(int priceCode) {
+		switch (priceCode) {
+			case REGULAR:
+				price = new RegularPrice();
+				break;
+			case CHILDREN:
+				price = new ChildrenPrice();
+				break;
+			case NEW_RELEASE:
+				price = new NewReleasePrice();
+				break;
+			default:
+				throw new IllegalArgumentException("Incorrect price code.");
+		}
 	}
 
 	public String getTitle() {
@@ -87,8 +100,24 @@ public class Video {
 		return registeredDate;
 	}
 
+	private void setVideoType(int videoType) {
+		switch (videoType) {
+			case VHS:
+				type = new VHSType();
+				break;
+			case CD:
+				type = new CDType();
+				break;
+			case DVD:
+				type = new DVDType();
+				break;
+			default:
+				throw new IllegalArgumentException("Incorrect video type.");
+		}
+	}
+
 	public int getVideoType() {
-		return videoType;
+		return type.getVideoType();
 	}
 
 	public boolean rentFor(Customer customer) {
@@ -140,5 +169,13 @@ public class Video {
 		default:
 			return false;
 		}
+	}
+
+	int getPoint(int daysRented) {
+		int point = price.getSavingPoint();
+
+		if (daysRented > type.getDaysRentedLimit())
+			point -= Math.min(point, type.getLateReturnPointPenalty());
+		return point;
 	}
 }

@@ -76,17 +76,11 @@ public class GoldenMaster {
 		return null;
 	}
 
-
 	public void generate() {
 		try {
-			System.out.println("***");
 			Files.write(Paths.get(goldenMasterFile), getRunResult().getBytes());
-			System.out.println("***");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-
-
 }
