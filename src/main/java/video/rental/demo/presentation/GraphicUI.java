@@ -11,6 +11,11 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerListModel;
 
+<<<<<<< HEAD
+import video.rental.demo.application.Interactor;
+
+=======
+>>>>>>> origin/VideoRental-demo-step2
 import javax.swing.JSpinner;
 import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
@@ -18,6 +23,17 @@ import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class GraphicUI extends JFrame {
+<<<<<<< HEAD
+	
+	private Interactor interactor;
+	
+	public GraphicUI(Interactor interactor) {
+		super();
+		initialize();
+		this.interactor = interactor;
+	}
+=======
+>>>>>>> origin/VideoRental-demo-step2
 
 	private JTextField userCodeField;
 	private JTextField nameField;
@@ -148,34 +164,55 @@ public class GraphicUI extends JFrame {
 		userCodeField.setText("");
 		titleField.setText("");
 		textArea.setText("");
+<<<<<<< HEAD
+		birthdayField.setText("");
+=======
+>>>>>>> origin/VideoRental-demo-step2
 	}
 
 	private void clearRentals()
 	{
 		int code = Integer.parseInt(userCodeField.getText().toString());
 
+<<<<<<< HEAD
+		String result = interactor.clearRentals(code);
+		
+=======
 		String result = "abc";
 
+>>>>>>> origin/VideoRental-demo-step2
 		textArea.append(result);
 	}
 
 	private void getCustomerReport() {
 		int code = Integer.parseInt(userCodeField.getText().toString());
 
+<<<<<<< HEAD
+		String result = interactor.getCustomerReport(code);
+=======
 		String result = "def";
+>>>>>>> origin/VideoRental-demo-step2
 
 		textArea.append(result);
 	}
 
 	private void listVideos() {
 		textArea.append("List of videos\n");
+<<<<<<< HEAD
+		textArea.append(interactor.listVideos());
+=======
 		textArea.append("hi");
+>>>>>>> origin/VideoRental-demo-step2
 		textArea.append("End of list\n");
 	}
 
 	private void listCustomers() {
 		textArea.append("List of customers\n");
+<<<<<<< HEAD
+		textArea.append(interactor.listCustomers());
+=======
 		textArea.append("hello");
+>>>>>>> origin/VideoRental-demo-step2
 		textArea.append("End of list\n");
 	}
 
@@ -183,14 +220,22 @@ public class GraphicUI extends JFrame {
 		int customerCode = Integer.parseInt(userCodeField.getText().toString());
 		String videoTitle = titleField.getText().toString();
 
+<<<<<<< HEAD
+		interactor.returnVideo(customerCode, videoTitle);
+=======
 		// ...
+>>>>>>> origin/VideoRental-demo-step2
 	}
 
 	private void rentVideo() {
 		int customerCode = Integer.parseInt(userCodeField.getText().toString());
 		String videoTitle = titleField.getText().toString();
 
+<<<<<<< HEAD
+		interactor.rentVideo(customerCode, videoTitle);
+=======
 		// ...
+>>>>>>> origin/VideoRental-demo-step2
 	}
 
 	private void registerUser() {
@@ -198,7 +243,11 @@ public class GraphicUI extends JFrame {
 		String name = nameField.getText().toString();
 		String birthday = birthdayField.getText().toString();
 
+<<<<<<< HEAD
+		interactor.registerCustomer(name, code, birthday);
+=======
 		// ...
+>>>>>>> origin/VideoRental-demo-step2
 	}
 
 	private void registerVideo() {
@@ -229,8 +278,13 @@ public class GraphicUI extends JFrame {
 			videoRating = 2;
 		else // Eighteen
 			videoRating = 3;
+<<<<<<< HEAD
+		
+		interactor.registerVideo(title, videoType, priceCode, videoRating);
+=======
 
 		// ...
+>>>>>>> origin/VideoRental-demo-step2
 	}
 
 	private void makeButton(String title, ActionListener listener, int x, int y, int w, int h) {

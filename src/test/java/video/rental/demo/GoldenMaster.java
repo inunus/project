@@ -76,11 +76,26 @@ public class GoldenMaster {
 		return null;
 	}
 
+<<<<<<< HEAD
+
+	public void generate() {
+		try {
+			System.out.println("***");
+			Files.write(Paths.get(goldenMasterFile), getRunResult().getBytes());
+			System.out.println("***");
+=======
 	public void generate() {
 		try {
 			Files.write(Paths.get(goldenMasterFile), getRunResult().getBytes());
+>>>>>>> origin/VideoRental-demo-step2
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+<<<<<<< HEAD
+	
+
+
+=======
+>>>>>>> origin/VideoRental-demo-step2
 }
