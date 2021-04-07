@@ -8,15 +8,18 @@ import java.util.List;
 import video.rental.demo.domain.Customer;
 import video.rental.demo.domain.Rating;
 import video.rental.demo.domain.Rental;
+import video.rental.demo.domain.Report;
 import video.rental.demo.domain.Repository;
 import video.rental.demo.domain.Video;
 
 public class Interactor {
 	private Repository repository;
+	private Report report;
 
-	public Interactor(Repository repository) {
+	public Interactor(Repository repository, Report report) {
 		super();
 		this.repository = repository;
+		this.report = report;
 	}
 
 	public String clearRentals(int customerCode) {
@@ -112,7 +115,7 @@ public class Interactor {
 		if (foundCustomer == null) {
 			builder.append("No customer found").append("\n");
 		} else {
-			String result = foundCustomer.getReport();
+			String result = report.getReport(foundCustomer.getName(), foundCustomer.getRentals());
 			builder.append(result).append("\n");
 		}
 		return builder.toString();
