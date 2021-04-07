@@ -2,7 +2,7 @@ package video.rental.demo.domain;
 
 import java.util.List;
 
-public class TextReportImpl implements Report {
+public class JsonReportImpl implements Report {
 	@Override
 	public String getReport(String name, List<Rental> rentals) {
 		String result = "Customer Report for " + name+ "\n";
